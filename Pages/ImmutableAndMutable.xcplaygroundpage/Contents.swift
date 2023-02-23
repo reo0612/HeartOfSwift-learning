@@ -1,4 +1,6 @@
 
+// TODO: もっと良い例を考えたい
+
 // イミュータブル(不変)なクラスを継承したミュータブル(可変)なサブクラスを生成すると
 // イミュータビリティ(不変性)が破壊されてしまう例
 
@@ -13,6 +15,10 @@ class Person {
     }
 }
 
+let person = Person(name: "reo", age: 25)
+// イミュータブルなクラスだからもちろん、コンパイルエラーになっちゃう
+//person.name = "imanishi"
+
 // ミュータブルなクラス
 class Men: Person {
     var mutableGrades: [Int] = []
@@ -24,18 +30,15 @@ let people: [Person] = [girl, men]
 
 for person in people {
     // 以下の条件だと問題が起きてしまう
-    // もちろん、personはPersonクラスのインスタンスなので
+    // もちろん、people[0]はPersonクラスのインスタンスなので
     // Menクラスのインスタンスにキャストできないから必ず失敗する
     if let _men = person as? Men {
         // ただif文の中では、girl(Personインスタンス)がMenのインスタンスに
         // キャストできた場合を前提としているので、mutableGradesにアクセスできてしまう
-        
-        // なので、コンパイルエラーにならないため、
-        // 実行中にエラーになるのでかなり注意が必要
-        
-        // この例だと、ここの条件に入ることは絶対ないが
-        // 下記のような危険性があるということ
         _men.mutableGrades.append(90)
+        
+        // コンパイルエラーにならず、
+        // 実行中にエラーになるのでかなり注意が必要
     }
 }
 print(men.mutableGrades)

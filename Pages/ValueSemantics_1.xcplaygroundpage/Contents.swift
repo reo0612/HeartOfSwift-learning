@@ -1,12 +1,13 @@
 import UIKit
 
 // Heart of Swift
+// 参照先: https://heart-of-swift.github.io/
 
 // Swiftの中心的な考え方は大きく2つ
 // ・Value Semantics(値の意味論)
 // ・Protocol-oriented Programing(プロトコル指向プログラミング)
 
-// ○ value Semanticsの定義
+// ○ Value Semanticsの定義
 
 // ある型がValue Semanticsを持っている状態
 // ・その型の変数を初期化、値を代入したり、引数に渡したりしたときに元の値のコピーが作られる
@@ -91,7 +92,7 @@ struct Foo {
 // Fooは値型のため、変数a及び変数bに別々のFooインスタンスのコピーが格納されているので
 // a.valueとb.valueはお互いの変更に影響を及ばさない
 
-// ただ、Barプロパティは参照型なのでaとbのbarプロパティにはBarのメモリアドレスが格納されている
+// ただ、Barは参照型なのでaとbのbarプロパティにはBarのメモリアドレスが格納されている
 // つまり、そのアドレスを介して同じインスタンスを参照しているということ
 
 // なので下記のように値を代入すれば
@@ -112,9 +113,9 @@ struct Foo {
 
 // このような型は非常に扱いづらいとされている
 
-// ・参照型だけどValue Semanticsを持っている例
+// ・参照型プロパティを持っているけどValue Semanticsを持つ例
 
-// 先ほどのBarクラスからイミュータブルなクラスに変更
+// 先ほどのBarクラスをイミュータブルなクラスに変更する
 final class Bar {
     let value: Int = 0
 }
@@ -131,7 +132,7 @@ var b = a
 a.value = 2
 //a.bar.value = 3 // コンパイルエラーになる
 
-// a.bar, b.barはどちらも同一のBarクラスを参照している
+// a.bar, b.barはどちらも同一のBarクラスのインスタンスを参照している
 // ただ、同じインスタンスを参照しているがBarクラスはイミュータブルなクラスなので
 // そのインスタンスを介してプロパティを変更することができない
 
@@ -152,3 +153,40 @@ var d = c
 
 // なのでイミュータブルクラス自体は、
 // Value Semanticsを持っている
+
+// MARK: - ミュータブルな参照型をプロパティを持つけどValue Semanticsを持つ例
+
+
+
+/*
+ 
+ 先ほどの例では、ミュータブルな参照型プロパティを持つ場合、Value Semanticsを持っていなかった
+ 
+ struct Foo {
+    var value: Int = 0
+    // ミュータブルな参照型プロパティ
+    var bar: Bar = Bar()
+ }
+ 
+ class Bar {
+    var value: Int = 0
+ }
+ 
+ しかし、「ミュータブルな参照型プロパティを持つ場合、Value Semanticsを持たない」というパターンで判断するのは危険⚠️
+ 
+ 例えば、標準ライブラリの`Array`は内部にミュータブルな参照型を保持しているのにも関わらず、
+ Copy-on-Writeという仕組みでValue Semanticsを実現している
+ 
+ なので大切なのは、そのようなパターンで判断しないで、定義をしっかり確認して判断することが大切である
+ 
+ */
+
+// MARK: - まとめ
+
+/*
+ 
+ ・ある型がValue Semanticsを持つ状態というのは、「その型の値が変更に対して独立している」ということ
+ ・値型とValue Semantics、参照型とReference Semanticsと混同して考えず、区別して考える
+ ・値型でもReference Semanticsを持っている事があるし、その逆もあり得るのでパターンで考えず、定義に基づいて判断する
+ 
+ */
